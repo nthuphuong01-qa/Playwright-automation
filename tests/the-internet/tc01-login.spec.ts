@@ -1,7 +1,15 @@
+/**
+1.Open browser
+2.Navigate to https://the-internet.herokuapp.com/login
+3.Fill in username with tomsmith
+4.Fill in the password with SuperSecretPassword!
+5.Click on Login button
+6.And the home page is appear
+ */
 import { test, expect } from '@playwright/test';
 
 test('Can login with correct username and password', async ({ page }) => {
-    //arrane
+    //arrange
   await page.goto('https://the-internet.herokuapp.com/login');
   //actions
   await page.getByRole('textbox', { name: 'Username' }).fill('tomsmith');

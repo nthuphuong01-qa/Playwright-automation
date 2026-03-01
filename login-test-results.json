@@ -1,0 +1,45 @@
+{
+  "timestamp": "2026-03-01T10:54:19.554Z",
+  "summary": {
+    "totalTests": 3,
+    "passed": 2,
+    "failed": 1,
+    "totalDuration": 43067
+  },
+  "results": [
+    {
+      "status": "FAIL",
+      "browser": "chromium",
+      "message": "Login test failed on chromium",
+      "screenshots": [],
+      "duration": 31025,
+      "error": "page.goto: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"https://the-internet.herokuapp.com/login\", waiting until \"load\"\u001b[22m\n"
+    },
+    {
+      "status": "PASS",
+      "browser": "firefox",
+      "message": "Login test passed on firefox",
+      "screenshots": [
+        "exported-screenshots\\firefox-step1-login-page.png",
+        "exported-screenshots\\firefox-step2-username-filled.png",
+        "exported-screenshots\\firefox-step3-password-filled.png",
+        "exported-screenshots\\firefox-step4-login-clicked.png",
+        "exported-screenshots\\firefox-step5-success.png"
+      ],
+      "duration": 6992
+    },
+    {
+      "status": "PASS",
+      "browser": "webkit",
+      "message": "Login test passed on webkit",
+      "screenshots": [
+        "exported-screenshots\\webkit-step1-login-page.png",
+        "exported-screenshots\\webkit-step2-username-filled.png",
+        "exported-screenshots\\webkit-step3-password-filled.png",
+        "exported-screenshots\\webkit-step4-login-clicked.png",
+        "exported-screenshots\\webkit-step5-success.png"
+      ],
+      "duration": 5050
+    }
+  ]
+}
