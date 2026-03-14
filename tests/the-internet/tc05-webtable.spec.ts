@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-  test('Cach1: Codegen Find largest due in table 1 belongs to Doe Jacson', async ({ page }) => {
+  test('Test1.1 Codegen Find largest due in table 1 belongs to Doe Jacson', async ({ page }) => {
     //cach 1: dung codegen
     await page.goto('https://the-internet.herokuapp.com/tables');
     const rows = page.locator('#table1 tbody tr');
@@ -27,7 +27,7 @@ import { test, expect } from '@playwright/test';
  //1. get table content => array[][]
  //2. get the index of max due
  //3. get the fullname of max due person
-test('Cach2: Verify fullname of max due person using locator', async ({page}) =>{
+test('Test1.2 Verify fullname of max due person using locator', async ({page}) =>{
   await page.goto('https://the-internet.herokuapp.com/tables');
     // const tableContents =  await page.locator("#table1 tbody tr td").allTextContents();
     // //print table content
@@ -47,40 +47,33 @@ test('Cach2: Verify fullname of max due person using locator', async ({page}) =>
 });
 
 //homewrofk: //verify fullname of min due person + verify max due when having more than 1 value
-test('Table 1: verify John Smith and Tim Conway have the minimum due value', async ({ page }) => {
-  await page.goto('https://the-internet.herokuapp.com/tables');
+test('Validate smallest due person', async ({ page }) => {
 
-  // Get all "Due" values from Table 1 (4th column)
-  const dueCells = page.locator('#table1 tbody tr td:nth-child(4)');
-  const allDueValuesText = await dueCells.allTextContents();
-  const dueValues = allDueValuesText.map(text =>
-    parseFloat(text.replace('$', ''))
-  );
-
-  // Find the minimum due value
-  const minDue = Math.min(...dueValues);
-  console.log(`The minimum due value in the table is: $${minDue.toFixed(2)}`);
-
-  const peopleWithMinDue = [];
-
-  // Iterate through the due values to find people with the minimum due
-  for (let i = 0; i < dueValues.length; i++) {
-    if (dueValues[i] === minDue) {
-      // Playwright uses 1-based indexing for nth-child
-      const rowSelector = `#table1 tbody tr:nth-child(${i + 1})`;
-      const firstName = await page.locator(`${rowSelector} td:nth-child(2)`).textContent();
-      const lastName = await page.locator(`${rowSelector} td:nth-child(1)`).textContent();
-      peopleWithMinDue.push(`${firstName?.trim()} ${lastName?.trim()}`);
-    }
-  }
-
-  // Sort the array to ensure consistent order for comparison
-  const sortedPeopleWithMinDue = peopleWithMinDue.sort();
-  const expectedPeople = ['John Smith', 'Tim Conway'].sort();
-
-  console.log('People found with minimum due:', sortedPeopleWithMinDue);
-  console.log('Expected people with minimum due:', expectedPeople);
-
-  // Assert that the found people match the expected list
-  expect(sortedPeopleWithMinDue).toEqual(expectedPeople);
+    await page.goto('https://the-internet.herokuapp.com/tables');
+  
+    const rows = await page.locator('#table1 tbody tr').all();
+  
+    const tableData: string[][] = [];
+   
+    // build 2D array
+    for (const row of rows) {
+      const cells = await row.locator('td').allTextContents();
+      tableData.push(cells);
+    }  
+    // lấy danh sách due
+    const dues = tableData.map(row => Number(row[3].replace('$', '')));
+  
+    // tìm giá trị nhỏ nhất
+    const minDue = Math.min(...dues);
+  
+    // lấy tất cả person có due = min
+    const personsWithMinDue = tableData
+      .filter(row => Number(row[3].replace('$', '')) === minDue)
+      .map(row => `${row[1]} ${row[0]}`);
+  
+    console.log(personsWithMinDue);
+  
+    // validate 2 người có due nhỏ nhất
+    expect(personsWithMinDue).toStrictEqual(['John Smith','Tim Conway']);
+    // expect(personsWithMinDue).toContain('Tim Conway');
 });
