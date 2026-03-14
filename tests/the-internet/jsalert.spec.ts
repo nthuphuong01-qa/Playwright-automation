@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-test('JS Alert popup is displayed when clicking the button', async ({ page }) => {
+test('TC07: JS Alert popup is displayed when clicking the button', async ({ page }) => {
 
   // Step 1: Open browser & navigate to the website
   await page.goto('https://the-internet.herokuapp.com/javascript_alerts');

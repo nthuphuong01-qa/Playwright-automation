@@ -19,7 +19,7 @@
 */
 import { test, expect } from '@playwright/test';
 
-test('Can login with correct username and password', async ({ page }) => {
+test('TC01: Can login with correct username and password by codegen', async ({ page }) => {
     //arrange
   await page.goto('https://the-internet.herokuapp.com/login');
   await page.locator("#username").fill('tomsmith');
@@ -30,4 +30,23 @@ test('Can login with correct username and password', async ({ page }) => {
   //assertions
   await expect(page.getByText('You logged into a secure area')).toBeVisible();
   await expect(page.locator('h4')).toContainText('Welcome to the Secure Area. When you are done click logout below.');
+});
+
+test('TC01: Test login with locator css: Can login with correct username and password', async ({ page }) => {
+  await page.goto('https://the-internet.herokuapp.com/login');
+  await page.locator('#username').fill('tomsmith');
+  await page.locator('#password').fill('SuperSecretPassword!');
+  await page.locator('button[type="submit"]').click();
+  await expect(page.getByText('You logged into a secure area!')).toBeVisible();
+});
+
+test('TC01: Test login with xpath: Can login with correct username and password', async ({ page }) => {
+  await page.goto('https://the-internet.herokuapp.com/login');
+
+  await page.locator("//input[@id='username']").fill('tomsmith');
+  await page.locator("//input[@id='password']").fill('SuperSecretPassword!');
+
+  await page.locator("//button[@type='submit']").click();
+
+  await expect(page.locator("//div[contains(text(),'You logged into a secure area!')]")).toBeVisible();
 });

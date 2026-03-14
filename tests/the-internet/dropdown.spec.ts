@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-test('Verify option 1 is selected from dropdown', async ({ page }) => {
+test('TC03:Verify option 1 is selected from dropdown', async ({ page }) => {
     //arrange
   await page.goto('https://the-internet.herokuapp.com/dropdown');
     //actions
@@ -11,12 +11,19 @@ test('Verify option 1 is selected from dropdown', async ({ page }) => {
   await expect(page.locator('#dropdown')).toHaveValue('1');
 });
 
-test('Verify option 2 is selected from dropdown', async ({ page }) => {
+test('TC03: Verify option 2 is selected from dropdown', async ({ page }) => {
     //arrange
     await page.goto('https://the-internet.herokuapp.com/dropdown');
     await page.locator('#dropdown').selectOption('2');
     await page.locator('html').click();
     await expect(page.locator('#dropdown')).toBeVisible();
   await expect(page.locator('#dropdown')).toHaveValue('2');
+});
+test('TC03:Dropdown with multiple options with locator', async ({ page }) => {
+    await page.goto('https://output.jsbin.com/osebed/2');
+    await page.locator('#fruits').selectOption(['apple', 'banana']);
+    await expect(page.locator('#fruits > option:checked')).toHaveText(['Banana', 'Apple' ]);
+    await page.locator('#fruits').selectOption([]);
+    await expect(page.locator('#fruits > option:checked')).toHaveText([]);
 });
 

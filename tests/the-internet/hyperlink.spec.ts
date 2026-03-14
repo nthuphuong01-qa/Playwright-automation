@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-test('Verify that hyperlink function work well', async ({ page }) => {
+test('TC04: Verify that hyperlink function work well', async ({ page }) => {
   await page.goto('https://the-internet.herokuapp.com/status_codes');
  //cach 1: dung getByRole (generate from codegen)
   await page.getByRole('link', { name: '200' }).click();
@@ -23,7 +23,7 @@ test('Verify that hyperlink function work well', async ({ page }) => {
 
 });
 //cach 2: dung locator
-test('Verify that hyperlink function work well using locator', async ({page}) =>{
+test('TC04: Verify that hyperlink function work well using locator', async ({page}) =>{
 
     await page.goto('https://the-internet.herokuapp.com/status_codes')
 

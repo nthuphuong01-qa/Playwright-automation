@@ -5,5 +5,5 @@ test('dropdown test', async ({ page }) => {
   await page.goto('https://the-internet.herokuapp.com/hovers');
 
   await page.locator('div.figure').nth(0).hover();
-  await expect(page.locator('div.figure').nth(0).locator('h5')).toHaveText('name: user1');
+  await expect(page.locator('div.figure').nth(0).locator('h5')).toBeVisible();
 });

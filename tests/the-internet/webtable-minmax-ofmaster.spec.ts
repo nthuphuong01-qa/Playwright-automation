@@ -1,6 +1,6 @@
 import {test,expect} from '@playwright/test'
 
-test('verify fullname of max due person', async ({page}) =>{
+test('TC05: verify fullname of max due person', async ({page}) =>{
 
   await page.goto('https://the-internet.herokuapp.com/tables');
     const table = await page.locator('#table1');
@@ -26,7 +26,7 @@ test('verify fullname of max due person', async ({page}) =>{
     expect(`${firstName} ${lastName}`).toBe('Jason Doe');
 });
 
-test('verify min due person full name', async ({ page }) => {
+test('TC05: verify min due person full name', async ({ page }) => {
     await page.goto('https://the-internet.herokuapp.com/tables');
     const table = await page.locator('#table1');
     const rows = await table.locator('tbody tr');

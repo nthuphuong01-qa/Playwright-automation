@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-  test('Test1.1 Codegen Find largest due in table 1 belongs to Doe Jacson', async ({ page }) => {
+  test('TC05: Codegen Find largest due in table 1 belongs to Doe Jacson', async ({ page }) => {
     //cach 1: dung codegen
     await page.goto('https://the-internet.herokuapp.com/tables');
     const rows = page.locator('#table1 tbody tr');
@@ -20,14 +20,14 @@ import { test, expect } from '@playwright/test';
       }
     }
 
-    expect(maxPerson).toBe('Doe Jacson');
+    expect(maxPerson).toBe('Doe Jason');
   });
  //cach 2: Dung locator
  //thuat toan giai:
  //1. get table content => array[][]
  //2. get the index of max due
  //3. get the fullname of max due person
-test('Test1.2 Verify fullname of max due person using locator', async ({page}) =>{
+test('TC05: Verify fullname of max due person using locator', async ({page}) =>{
   await page.goto('https://the-internet.herokuapp.com/tables');
     // const tableContents =  await page.locator("#table1 tbody tr td").allTextContents();
     // //print table content
@@ -47,7 +47,7 @@ test('Test1.2 Verify fullname of max due person using locator', async ({page}) =
 });
 
 //homewrofk: //verify fullname of min due person + verify max due when having more than 1 value
-test('Validate smallest due person', async ({ page }) => {
+test('TC05:Validate smallest due person', async ({ page }) => {
 
     await page.goto('https://the-internet.herokuapp.com/tables');
   
