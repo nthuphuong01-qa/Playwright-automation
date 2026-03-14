@@ -6,11 +6,23 @@
 5.Click on Login button
 6.And the home page is appear
  */
+/* answer 3 questions:
+   * 1. tagname (E): input
+   * 2. attributes(name-> A, value -> t ) 
+   *      name=username, id=username, type=text
+   * 3. text?
+   * n/a
+   * 
+   * Css selector: E[A=t] or [A=t] if A=id => E#t or #t, if A=class => E.t or .t
+   * * //E[@A='t'] or //*[@A='t'] 
+   * //E[contains(@A,t)] or //*[contains(@A,t)]
+*/
 import { test, expect } from '@playwright/test';
 
 test('Can login with correct username and password', async ({ page }) => {
     //arrange
   await page.goto('https://the-internet.herokuapp.com/login');
+  await page.locator("#username").fill('tomsmith');
   //actions
   await page.getByRole('textbox', { name: 'Username' }).fill('tomsmith');
   await page.getByRole('textbox', { name: 'Password' }).fill('SuperSecretPassword!');

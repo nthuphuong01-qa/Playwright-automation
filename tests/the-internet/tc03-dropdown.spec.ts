@@ -9,7 +9,7 @@ test('Verify option 1 is selected from dropdown', async ({ page }) => {
   //assertions
   await expect(page.locator('#dropdown')).toBeVisible();
   await expect(page.locator('#dropdown')).toHaveValue('1');
-})
+});
 
 test('Verify option 2 is selected from dropdown', async ({ page }) => {
     //arrange
@@ -19,3 +19,4 @@ test('Verify option 2 is selected from dropdown', async ({ page }) => {
     await expect(page.locator('#dropdown')).toBeVisible();
   await expect(page.locator('#dropdown')).toHaveValue('2');
 });
+
