@@ -17,19 +17,38 @@
    * * //E[@A='t'] or //*[@A='t'] 
    * //E[contains(@A,t)] or //*[contains(@A,t)]
 */
-import { test, expect } from '@playwright/test';
+/*import { test, expect } from '@playwright/test';
 
 test('TC01: Can login with correct username and password by codegen', async ({ page }) => {
     //arrange
-  await page.goto('https://the-internet.herokuapp.com/login');
-  await page.locator("#username").fill('tomsmith');
-  //actions
+    const loginPage = new LoginPage(page);
+    await loginPage.goto();
+    await loginPage.login('tomsmith', 'SuperSecretPassword!');
+  /*actions
   await page.getByRole('textbox', { name: 'Username' }).fill('tomsmith');
   await page.getByRole('textbox', { name: 'Password' }).fill('SuperSecretPassword!');
   await page.getByRole('button', { name: ' Login' }).click();
   //assertions
+
   await expect(page.getByText('You logged into a secure area')).toBeVisible();
   await expect(page.locator('h4')).toContainText('Welcome to the Secure Area. When you are done click logout below.');
+});*/
+// Run test by importing from the page:
+/*import { test, expect } from '@playwright/test';
+import { LoginPage } from './pages/login.page';
+
+test('Page: should successfully login with valid credentials', async ({ page }) => {
+  const loginPage = new LoginPage(page);
+  //arrange
+  loginPage.goto();
+  //actions
+  loginPage.login('tomsmith', 'SuperSecretPassword!');
+  // //assertions
+  await expect(await loginPage.getSuccessFlashMessage())
+  .toContainText('You logged into a secure area!'); 
+  
+  await expect(await loginPage.getWelcomeMessage())
+  .toContainText('Welcome to the Secure Area. When you are done click logout below.');
 });
 
 test('TC01: Test login with locator css: Can login with correct username and password', async ({ page }) => {
@@ -49,4 +68,13 @@ test('TC01: Test login with xpath: Can login with correct username and password'
   await page.locator("//button[@type='submit']").click();
 
   await expect(page.locator("//div[contains(text(),'You logged into a secure area!')]")).toBeVisible();
+});*/
+import { test, expect } from './fixtures/the-internet.fixtures';
+test('Should successfully login with valid credentials', async ({ loginPage }) => {
+  await loginPage.goto();
+  await loginPage.login('tomsmith', 'SuperSecretPassword!');
+  await expect(await loginPage.getSuccessFlashMessage())
+  .toContainText('You logged into a secure area!');
+  await expect(await loginPage.getWelcomeMessage())
+  .toContainText('Welcome to the Secure Area. When you are done click logout below.');
 });

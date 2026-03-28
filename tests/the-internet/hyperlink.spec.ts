@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+/*import { test, expect } from '@playwright/test';
 
 test('TC04: Verify that hyperlink function work well', async ({ page }) => {
   await page.goto('https://the-internet.herokuapp.com/status_codes');
@@ -45,3 +45,19 @@ test('TC04: Verify that hyperlink function work well using locator', async ({pag
     expect(page.url()).toContain('status_codes/500');
     await page.getByRole('link', { name: 'here' }).click();
 });;
+*/
+import { test, expect } from './fixtures/the-internet.fixtures';
+
+test.describe('Hyperlink tests', () => {
+   test('TC04: Verify that hyperlink function work well', async ({ hyperlinkPage }) => {
+    await hyperlinkPage.goToHyperlinkPage();
+
+    const codes = ['200', '301', '404', '500'];
+
+    for (const code of codes) {
+        const text = await hyperlinkPage.verifyStatusCode(code);
+        expect(text).toContain(`This page returned a ${code}`);
+        await hyperlinkPage.clickHereLink();
+    }
+});
+});

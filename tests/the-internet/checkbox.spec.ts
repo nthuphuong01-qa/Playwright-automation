@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+/*import { test, expect } from '@playwright/test';
 
 test('TC02:Test checkbox with codegen', async ({ page }) => {
   await page.goto('https://the-internet.herokuapp.com/checkboxes');
@@ -44,3 +44,14 @@ test('verify able to check the checkbox', async ({page}) =>{
     expect(await page.getByRole('checkbox').nth(1)).toBeChecked();
 });
 */
+import { test, expect } from './fixtures/the-internet.fixtures';
+
+test('verify able to check the checkbox', async ({checkboxesPage}) =>{
+    await checkboxesPage.goto();
+
+    await checkboxesPage.checkFirstCheckbox(); // accessibility role
+    await checkboxesPage.checkSecondCheckbox(); // accessibility role
+
+    expect(await checkboxesPage.isFirstCheckboxChecked()).toBe(true);
+    expect(await checkboxesPage.isSecondCheckboxChecked()).toBe(true);
+});
