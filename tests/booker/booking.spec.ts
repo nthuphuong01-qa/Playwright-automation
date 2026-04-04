@@ -1,78 +1,135 @@
 import { test, expect } from '@playwright/test';
+import { z } from 'zod';
 
-// Biến dùng chung để chứa token
+const bookingSchema = z.object({
+  firstname: z.string(),
+  lastname: z.string(),
+  totalprice: z.number(),
+  depositpaid: z.boolean(),
+  bookingdates: z.object({
+    checkin: z.string(),
+    checkout: z.string()
+  }),
+  additionalneeds: z.string().optional()
+});
+
 let token: string;
 
 test.beforeAll(async ({ request }) => {
-    // Lấy token một lần duy nhất trước khi chạy các test case
-    const authResponse = await request.post('https://restful-booker.herokuapp.com/auth', {
-        data: { username: 'admin', password: 'password123' }
-    });
-    const authData = await authResponse.json();
-    token = authData.token;
+  const authResponse = await request.post('https://restful-booker.herokuapp.com/auth', {
+    data: { username: 'admin', password: 'password123' }
+  });
+  const authData = await authResponse.json();
+  token = authData.token;
 });
 
 test("GET all bookings", async ({ request }) => {
-    const response = await request.get('https://restful-booker.herokuapp.com/booking');
-    expect(response.status()).toBe(200);
-    const bookings = await response.json();
-    expect(Array.isArray(bookings)).toBe(true);
-    // Kiểm tra mẫu 1 item đầu tiên cho nhanh
-    if (bookings.length > 0) {
-        expect(bookings[0]).toHaveProperty('bookingid');
-    }
+  const response = await request.get('https://restful-booker.herokuapp.com/booking');
+  expect(response.status()).toBe(200);
+
+  const bookings = await response.json();
+  expect(Array.isArray(bookings)).toBe(true);
+
+  if (bookings.length > 0) {
+    expect(bookings[0]).toHaveProperty('bookingid');
+  }
 });
 
 test("Create a new booking", async ({ request }) => {
-    const newBooking = {
-        firstname: "John",
-        lastname: "Doe",
-        totalprice: 150,
-        depositpaid: true,
-        bookingdates: { checkin: "2026-01-01", checkout: "2026-12-31" },
-        additionalneeds: "Breakfast"
-    };
-    const response = await request.post('https://restful-booker.herokuapp.com/booking', {
-        data: newBooking
-    });
-    expect(response.status()).toBe(200);
-    const body = await response.json();
-    expect(body.booking).toMatchObject(newBooking);
+  const newBooking = {
+    firstname: "John",
+    lastname: "Doe",
+    totalprice: 150,
+    depositpaid: true,
+    bookingdates: { checkin: "2026-01-01", checkout: "2026-12-31" },
+    additionalneeds: "Breakfast"
+  };
+
+  const response = await request.post('https://restful-booker.herokuapp.com/booking', {
+    data: newBooking
+  });
+
+  expect(response.status()).toBe(200);
+  const body = await response.json();
+  expect(body.booking).toMatchObject(newBooking);
+});
+
+
+test("DELETE a booking", async ({ request }) => {
+  const list = await request.get('https://restful-booker.herokuapp.com/booking');
+  const bookings = await list.json();
+  const id = bookings[0].bookingid;
+
+  const response = await request.delete(
+    `https://restful-booker.herokuapp.com/booking/${id}`,
+    {
+      headers: {
+        Cookie: `token=${token}`
+      }
+    }
+  );
+
+  expect(response.status()).toBe(201);
+});
+
+test("PATCH partially update booking", async ({ request }) => {
+  const bookingsResponse = await request.get('https://restful-booker.herokuapp.com/booking');
+  const bookings = await bookingsResponse.json();
+  const id = bookings[Math.floor(Math.random() * bookings.length)].bookingid;
+
+  const payload = {
+    firstname: 'Jim',
+    lastname: 'Brown'
+  };
+
+  const response = await request.patch(
+    `https://restful-booker.herokuapp.com/booking/${id}`,
+    {
+      data: payload,
+      headers: {
+        Cookie: `token=${token}`,
+        'Content-Type': 'application/json'
+      }
+    }
+  );
+
+  expect(response.status()).toBe(200);
+  const body = await response.json();
+
+  expect(body.firstname).toBe(payload.firstname);
 });
 
 test("PUT update an existing booking", async ({ request }) => {
-    const updatedPayload = {
-        firstname: "Jane",
-        lastname: "Smith",
-        totalprice: 200,
-        depositpaid: true,
-        bookingdates: { checkin: "2026-04-01", checkout: "2026-04-10" },
-        additionalneeds: "Lunch"
-    };
+  // Lấy 1 booking id hợp lệ
+  const list = await request.get('https://restful-booker.herokuapp.com/booking');
+  const bookings = await list.json();
+  const id = bookings[0].bookingid;
 
-    // Lưu ý: Phải có Cookie Token
-    const response = await request.put('https://restful-booker.herokuapp.com/booking/2', {
-        data: updatedPayload,
-        headers: {
-            'Cookie': `token=${token}`
-        }
-    });
+  const payload = {
+    firstname: "Jane",
+    lastname: "Smith",
+    totalprice: 200,
+    depositpaid: true,
+    bookingdates: {
+      checkin: "2026-04-01",
+      checkout: "2026-04-10"
+    },
+    additionalneeds: "Lunch"
+  };
 
-    expect(response.status()).toBe(200);
-    const body = await response.json();
-    expect(body.firstname).toBe("Jane");
-});
+  const response = await request.patch(
+    `https://restful-booker.herokuapp.com/booking/${id}`,
+    {
+      data: payload,
+      headers: {
+        Cookie: `token=${token}`, // ✅ bắt buộc
+        'Content-Type': 'application/json'
+      }
+    }
+  );
 
-test("DELETE a booking", async ({ request }) => {
-    // Lấy đại 1 ID để xóa thay vì fix cứng số 1
-    const listResponse = await request.get('https://restful-booker.herokuapp.com/booking');
-    const bookings = await listResponse.json();
-    const idToDelete = bookings[0].bookingid;
+  expect(response.status()).toBe(200);
 
-    const response = await request.delete(`https://restful-booker.herokuapp.com/booking/${idToDelete}`, {
-        headers: { 'Cookie': `token=${token}` }
-    });
-
-    // API này trả về 201 khi xóa thành công
-    expect(response.status()).toBe(201);
+  const body = await response.json();
+  expect(body.firstname).toBe("Jane");
 });
