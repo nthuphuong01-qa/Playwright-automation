@@ -1,20 +1,29 @@
 import {test,expect} from '@playwright/test';
 
-test('verify broken image', async ({page}) => {
-    await page.goto('/broken_images');
-    
-    const images = page.locator('img');
-    
-    // Check if the image is present
-    const allImages = await images.all();
+test('verify broken image', async ({ page }) => {
+  await page.goto('/broken_images');
 
-    for (const image of allImages) {
-        const imgSrc = await image.getAttribute('src');
-        expect(imgSrc?.length).toBeGreaterThan(1)
-        const res = await page.request.get("https://the-internet.herokuapp.com/"+imgSrc)
-        console.log("Image src:", imgSrc);
-        expect(res.status()).toBe(200)// Ensure src attribute exists
-    }   
+  const images = page.locator('img');
+  const count = await images.count();
+
+  let brokenCount = 0;
+
+  for (let i = 0; i < count; i++) {
+    const image = images.nth(i);
+
+    const isBroken = await image.evaluate((img: HTMLImageElement) => {
+      return img.naturalWidth === 0;
+    });
+
+    if (isBroken) {
+      brokenCount++;
+    }
+  }
+
+  console.log('Broken images:', brokenCount);
+
+  // Expect đúng theo thực tế: có 2 ảnh bị broken
+  expect(brokenCount).toBe(2);
 });
 
 

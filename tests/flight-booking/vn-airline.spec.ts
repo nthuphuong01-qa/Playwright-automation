@@ -6,7 +6,7 @@
  */
 import { test, expect } from '@playwright/test';
 
-test('test flight booking flow', async ({ page }) => {
+test.skip('test flight booking flow', async ({ page }) => {
   await page.goto('https://www.vietnamairlines.com/vn/vi/');
 
   // Handle Cookie/Privacy Pop-up

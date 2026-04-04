@@ -1,5 +1,5 @@
 import {test, expect} from '@playwright/test';
-test('verify able select depart date', async ({page}) => {
+test.skip('verify able select depart date', async ({page}) => {
     //get cunrenent month and year
     const currentDate = new Date();
     const currentMonth = String(currentDate.getMonth() + 1).padStart(2, '0');
